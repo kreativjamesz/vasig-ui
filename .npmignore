@@ -1,0 +1,14 @@
+node_modules
+dist
+docs
+src/dev
+*.log
+.git
+.gitignore
+.vscode
+.idea
+*.md
+!README.md
+index.html
+vite.config.ts
+tsconfig.json
