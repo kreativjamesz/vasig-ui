@@ -2,8 +2,8 @@
 
 @theme {
   /* Primary Colors */
-  --color-primary: #42b983;
-  --color-primary-hover: #35a372;
+  --color-primary: #55aa00;
+  --color-primary-hover: #448800;
   
   /* Secondary Colors */
   --color-secondary: #6b7280;
@@ -13,17 +13,17 @@
   --color-error: #ef4444;
   --color-error-hover: #dc2626;
   
-  /* Gray Scale - Override Tailwind's default blue-tinted gray */
-  --color-gray-50: #f9fafb;
-  --color-gray-100: #f3f4f6;
-  --color-gray-200: #e5e7eb;
-  --color-gray-300: #d1d5db;
-  --color-gray-400: #9ca3af;
-  --color-gray-500: #6b7280;
-  --color-gray-600: #4b5563;
-  --color-gray-700: #374151;
-  --color-gray-800: #262626;
-  --color-gray-900: #1a1a1a;
+  /* Gray Scale - Override Tailwind's default blue-tinted gray - Darker version */
+  --color-gray-50: #f5f5f5;
+  --color-gray-100: #e5e5e5;
+  --color-gray-200: #d4d4d4;
+  --color-gray-300: #a3a3a3;
+  --color-gray-400: #737373;
+  --color-gray-500: #525252;
+  --color-gray-600: #404040;
+  --color-gray-700: #2d2d2d;
+  --color-gray-800: #1a1a1a;
+  --color-gray-900: #0f0f0f;
 }
 
 @variant dark (&:where(.dark, .dark *));
@@ -43,7 +43,7 @@ html:not(.dark) {
 }
 
 html.dark {
-  background-color: #1a1a1a;
+  background-color: var(--color-gray-900);
   color: #f9fafb;
 }
 

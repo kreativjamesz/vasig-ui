@@ -36,7 +36,7 @@
             'border-red-500 focus:border-red-500 focus:ring-red-500/20': hasError,
             'border-gray-300 dark:border-gray-600 focus:border-primary focus:ring-primary/20': !hasError,
             'bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400 cursor-not-allowed focus:ring-0': disabled,
-            'bg-white dark:bg-gray-900 text-gray-900 dark:text-white': !disabled
+            'bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white': !disabled
           }
         )"
         @input="handleInput"

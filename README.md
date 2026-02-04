@@ -43,48 +43,50 @@ app.component('Modal', Modal)
 
 ## 📚 Components
 
-### Button
+Vasig UI includes 19+ components:
+
+**Form Components:**
+- `Button` - With style and semantic color variants
+- `Input` - Text input with validation
+- `Textarea` - Multi-line text input
+- `Checkbox` - Checkbox with label
+- `Radio` - Radio button with label
+- `Switch` - Toggle switch
+- `Label` - Form label component
+
+**Layout Components:**
+- `Card` - Card container with header/footer
+- `Container` - Responsive container
+- `Separator` - Horizontal/vertical divider
+- `Badge` - Badge/pill component
+
+**Feedback Components:**
+- `Alert` - Alert/notification
+- `Toast` - Toast notification
+- `Modal` - Modal dialog
+- `Tooltip` - Hover tooltip
+- `Progress` - Progress bar
+- `Spinner` - Loading spinner
+- `Skeleton` - Loading skeleton
+
+**Display Components:**
+- `Avatar` - User avatar with badge support
+
+### Example Usage
 
 ```vue
 <template>
   <Button variant="primary" size="medium" @click="handleClick">
     Click Me
   </Button>
+  <Button variant="destructive">Delete</Button>
+  <Button variant="success">Save</Button>
 </template>
 ```
 
-**Props:**
-- `variant`: `'primary' | 'secondary' | 'outline' | 'ghost'`
-- `size`: `'small' | 'medium' | 'large'`
-- `disabled`: `boolean`
-- `loading`: `boolean`
-- `block`: `boolean`
-
-### Modal
-
-```vue
-<template>
-  <Modal v-model="isOpen" title="My Modal" size="medium">
-    <p>Modal content goes here</p>
-    <template #footer>
-      <Button @click="isOpen = false">Close</Button>
-    </template>
-  </Modal>
-</template>
-```
-
-**Props:**
-- `modelValue`: `boolean` (v-model)
-- `title`: `string`
-- `size`: `'small' | 'medium' | 'large'`
-- `centered`: `boolean`
-- `closable`: `boolean`
-- `closeOnOverlay`: `boolean`
-
-**Slots:**
-- `default` - Modal body content
-- `header` - Custom header
-- `footer` - Footer content
+**Button Variants:**
+- Style: `primary`, `secondary`, `outline`, `ghost`
+- Semantic: `success`, `warning`, `destructive`, `info`
 
 ## 🛠️ Development
 
@@ -108,16 +110,34 @@ Full documentation is available at [docs/](./docs/) (coming soon).
 
 ## 🎨 Theming
 
-Customize the look and feel using CSS variables:
+Customize the look and feel using CSS variables in your global CSS file:
 
 ```css
-:root {
-  --vasig-primary: #3b82f6;
-  --vasig-primary-hover: #2563eb;
-  --vasig-secondary: #6b7280;
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #55aa00;
+  --color-primary-hover: #448800;
+  --color-secondary: #6b7280;
   /* ... more variables */
 }
 ```
+
+## 🛠️ CLI Installation
+
+Install components directly into your project using the CLI:
+
+```bash
+# Initialize Vasig UI
+npx vasig-ui-vue init
+
+# Add components
+npx vasig-ui-vue add button
+npx vasig-ui-vue add badge
+npx vasig-ui-vue list
+```
+
+The CLI supports both standard Vue projects and Laravel projects with automatic detection.
 
 ## 📝 License
 

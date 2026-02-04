@@ -1,4 +1,4 @@
-export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'ghost'
+export type ButtonVariant = 'primary' | 'secondary' | 'success' | 'warning' | 'destructive' | 'info' | 'outline' | 'ghost'
 export type ButtonSize = 'small' | 'medium' | 'large'
 
 export interface ButtonProps {

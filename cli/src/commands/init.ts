@@ -26,28 +26,39 @@ export async function initCommand(options: { dir?: string; css?: string }) {
   // Interactive questions if options not provided
   let answers: {
     componentsDir: string
-    cssFile: string
-    utilsDir: string
+    installTailwind: boolean
+    cssFile?: string
     componentsAlias: string
     utilsAlias: string
     enableDarkMode: boolean
     useCustomGray: boolean
   }
 
+  // Detect Laravel project
+  const isLaravel = await fs.pathExists(path.resolve(projectRoot, 'artisan')) || 
+                    await fs.pathExists(path.resolve(projectRoot, 'app'))
+  
+  // Set defaults based on project type
+  const defaultComponentsDir = isLaravel ? 'resources/js/components/vasig' : 'src/components/vasig'
+  const defaultCssFile = isLaravel ? 'resources/css/app.css' : 'src/style.css'
+  const utilsDir = isLaravel ? 'resources/js/utils' : 'src/utils'
+  
+  if (isLaravel) {
+    console.log(chalk.cyan('📦 Laravel project detected! Using Laravel-specific defaults.\n'))
+  }
+
   if (options.dir && options.css) {
     // Use provided options, but still ask for other configs
-    const utilsDir = options.dir.includes('components')
-      ? options.dir.replace('components', 'utils')
-      : 'src/utils'
-    
-    const additionalAnswers = await inquirer.prompt([
+    const installTailwindAnswer = await inquirer.prompt([
       {
-        type: 'input',
-        name: 'utilsDir',
-        message: 'Where would you like to install your utils?',
-        default: utilsDir,
-        validate: (input: string) => input.length > 0 || 'Utils directory is required'
-      },
+        type: 'confirm',
+        name: 'installTailwind',
+        message: 'Do you want to install/configure Tailwind CSS in your global CSS file?',
+        default: true
+      }
+    ])
+
+    const additionalAnswers = await inquirer.prompt([
       {
         type: 'input',
         name: 'componentsAlias',
@@ -66,18 +77,21 @@ export async function initCommand(options: { dir?: string; css?: string }) {
         type: 'confirm',
         name: 'enableDarkMode',
         message: 'Would you like to configure dark mode variant?',
-        default: true
+        default: true,
+        when: () => installTailwindAnswer.installTailwind === true
       },
       {
         type: 'confirm',
         name: 'useCustomGray',
         message: 'Would you like to use custom neutral gray colors (overrides Tailwind\'s blue-tinted gray)?',
-        default: true
+        default: true,
+        when: () => installTailwindAnswer.installTailwind === true
       }
     ])
 
     answers = {
       componentsDir: options.dir,
+      installTailwind: installTailwindAnswer.installTailwind,
       cssFile: options.css,
       ...additionalAnswers
     }
@@ -88,7 +102,7 @@ export async function initCommand(options: { dir?: string; css?: string }) {
         type: 'input',
         name: 'componentsDir',
         message: 'Where would you like to install your components?',
-        default: 'src/components/vasig',
+        default: defaultComponentsDir,
         validate: (input: string) => {
           if (input.length === 0) return 'Components directory is required'
           if (input === 'src/components/ui') {
@@ -99,21 +113,18 @@ export async function initCommand(options: { dir?: string; css?: string }) {
         }
       },
       {
-        type: 'input',
-        name: 'cssFile',
-        message: 'Where is your global CSS file?',
-        default: 'src/style.css',
-        validate: (input: string) => input.length > 0 || 'CSS file path is required'
+        type: 'confirm',
+        name: 'installTailwind',
+        message: 'Do you want to install/configure Tailwind CSS in your global CSS file?',
+        default: true
       },
       {
         type: 'input',
-        name: 'utilsDir',
-        message: 'Where would you like to install your utils?',
-        default: (prevAnswers: any) => {
-          const dir = prevAnswers.componentsDir || 'src/components/vasig'
-          return dir.includes('components') ? dir.replace('components', 'utils') : 'src/utils'
-        },
-        validate: (input: string) => input.length > 0 || 'Utils directory is required'
+        name: 'cssFile',
+        message: 'Where is your global CSS file?',
+        default: defaultCssFile,
+        validate: (input: string) => input.length > 0 || 'CSS file path is required',
+        when: (answers: any) => answers.installTailwind === true
       },
       {
         type: 'input',
@@ -133,25 +144,31 @@ export async function initCommand(options: { dir?: string; css?: string }) {
         type: 'confirm',
         name: 'enableDarkMode',
         message: 'Would you like to configure dark mode variant?',
-        default: true
+        default: true,
+        when: (answers: any) => answers.installTailwind === true
       },
       {
         type: 'confirm',
         name: 'useCustomGray',
         message: 'Would you like to use custom neutral gray colors (overrides Tailwind\'s blue-tinted gray)?',
-        default: true
+        default: true,
+        when: (answers: any) => answers.installTailwind === true
       }
     ])
   }
 
+  // Determine final CSS file path (only if installing Tailwind)
+  const finalCssFile = answers.installTailwind ? (answers.cssFile || defaultCssFile) : undefined
+
   const finalOptions = {
     dir: answers.componentsDir,
-    css: answers.cssFile,
-    utilsDir: answers.utilsDir,
+    css: finalCssFile,
+    installTailwind: answers.installTailwind,
+    utilsDir: utilsDir,
     componentsAlias: answers.componentsAlias,
     utilsAlias: answers.utilsAlias,
-    enableDarkMode: answers.enableDarkMode,
-    useCustomGray: answers.useCustomGray
+    enableDarkMode: answers.enableDarkMode ?? false,
+    useCustomGray: answers.useCustomGray ?? false
   }
 
   // Create components directory
@@ -160,9 +177,9 @@ export async function initCommand(options: { dir?: string; css?: string }) {
   console.log(chalk.green(`✓ Created components directory: ${finalOptions.dir}`))
 
   // Create utils directory and cn utility
-  const utilsDir = path.resolve(projectRoot, finalOptions.utilsDir)
-  await fs.ensureDir(utilsDir)
-  const utilsPath = path.resolve(utilsDir, 'cn.ts')
+  const utilsDirPath = path.resolve(projectRoot, finalOptions.utilsDir)
+  await fs.ensureDir(utilsDirPath)
+  const utilsPath = path.resolve(utilsDirPath, 'cn.ts')
   const utilsTemplate = `import type { ClassValue } from 'clsx'
 import { clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge'
@@ -178,18 +195,23 @@ export function cn(...inputs: ClassValue[]) {
     console.log(chalk.gray(`- Utils file already exists: ${utilsPath}`))
   }
 
-  // Create or update CSS file
-  const cssPath = path.resolve(projectRoot, finalOptions.css)
-  const cssDir = path.dirname(cssPath)
-  await fs.ensureDir(cssDir)
+  // Create or update CSS file (only if installing Tailwind)
+  if (!finalOptions.installTailwind) {
+    console.log(chalk.gray(`- Skipping Tailwind CSS configuration (user chose not to install)`))
+  } else if (!finalOptions.css) {
+    console.log(chalk.yellow(`⚠️  CSS file path not provided, skipping Tailwind CSS configuration`))
+  } else {
+    const cssPath = path.resolve(projectRoot, finalOptions.css)
+    const cssDir = path.dirname(cssPath)
+    await fs.ensureDir(cssDir)
 
   // Build CSS content based on options
   let cssVars = `@import "tailwindcss";
 
 @theme {
   /* Primary Colors */
-  --color-primary: #42b983;
-  --color-primary-hover: #35a372;
+  --color-primary: #55aa00;
+  --color-primary-hover: #448800;
   
   /* Secondary Colors */
   --color-secondary: #6b7280;
@@ -253,17 +275,37 @@ body {
 }
 `
 
+  // Check if CSS file exists and ask for confirmation to overwrite
   if (await fs.pathExists(cssPath)) {
     const existingCss = await fs.readFile(cssPath, 'utf-8')
-    if (!existingCss.includes('--color-primary') && !existingCss.includes('@import "tailwindcss"')) {
-      await fs.appendFile(cssPath, `\n\n${cssVars}`)
-      console.log(chalk.green(`✓ Added Tailwind CSS and variables to: ${finalOptions.css}`))
-    } else {
+    
+    // Check if already has Vasig UI config
+    if (existingCss.includes('--color-primary') || existingCss.includes('@import "tailwindcss"')) {
       console.log(chalk.gray(`- Tailwind CSS already configured in: ${finalOptions.css}`))
+    } else {
+      // Ask for confirmation to overwrite existing file
+      const { overwrite } = await inquirer.prompt([
+        {
+          type: 'confirm',
+          name: 'overwrite',
+          message: `⚠️  The file ${finalOptions.css} already exists. Do you want to overwrite it? (This will replace all content)`,
+          default: false
+        }
+      ])
+
+      if (overwrite) {
+        await fs.writeFile(cssPath, cssVars)
+        console.log(chalk.green(`✓ Overwritten CSS file with Tailwind CSS: ${finalOptions.css}`))
+      } else {
+        // Append instead
+        await fs.appendFile(cssPath, `\n\n${cssVars}`)
+        console.log(chalk.green(`✓ Added Tailwind CSS and variables to: ${finalOptions.css}`))
+      }
     }
   } else {
     await fs.writeFile(cssPath, cssVars)
     console.log(chalk.green(`✓ Created CSS file with Tailwind CSS: ${finalOptions.css}`))
+    }
   }
 
   // Create config file
@@ -350,8 +392,20 @@ body {
         }
         
         // Extract alias paths from answers
-        const componentsAliasPath = finalOptions.componentsAlias.replace('@', 'src').replace('/*', '')
-        const utilsAliasPath = finalOptions.utilsAlias.replace('@', 'src').replace('/*', '')
+        // Handle both src/ and resources/ structures (Laravel uses resources/)
+        const componentsAliasBase = finalOptions.componentsAlias.replace('@', '').replace('/*', '')
+        const utilsAliasBase = finalOptions.utilsAlias.replace('@', '').replace('/*', '')
+        
+        // Determine base path - check if Laravel (resources/) or standard (src/)
+        const componentsDirParts = finalOptions.dir.split('/')
+        const basePath = componentsDirParts[0] === 'resources' ? 'resources' : 'src'
+        
+        const componentsAliasPath = componentsAliasBase.startsWith('/') 
+          ? componentsAliasBase.substring(1)
+          : `${basePath}${componentsAliasBase}`
+        const utilsAliasPath = utilsAliasBase.startsWith('/')
+          ? utilsAliasBase.substring(1)
+          : `${basePath}${utilsAliasBase}`
         
         // Add resolve.alias configuration
         // Look for existing resolve block
@@ -412,22 +466,34 @@ body {
 
   console.log(chalk.green('✨ Vasig UI initialized successfully!\n'))
   console.log(chalk.cyan('Next steps:'))
-  console.log(chalk.gray('  1. Install dependencies:'))
-  console.log(chalk.white('     npm install -D tailwindcss@latest @tailwindcss/vite@latest'))
-  console.log(chalk.white('     npm install clsx tailwind-merge'))
-  console.log(chalk.gray('  2. Add Tailwind plugin to vite.config.ts:'))
-  console.log(chalk.white('     import tailwindcss from "@tailwindcss/vite"'))
-  console.log(chalk.white('     plugins: [vue(), tailwindcss()]'))
-  console.log(chalk.gray('  3. Import the CSS file in your main.ts or main.js:'))
-  console.log(chalk.white(`     import '${finalOptions.css}'`))
-  console.log(chalk.gray('  4. Add components using:'))
+  
+  let stepNumber = 1
+  
+  // Only show CSS import step if Tailwind CSS was installed
+  if (finalOptions.installTailwind && finalOptions.css) {
+    console.log(chalk.gray(`  ${stepNumber}. Import the CSS file in your main.ts or main.js:`))
+    console.log(chalk.white(`     import '${finalOptions.css}'`))
+    stepNumber++
+  }
+  
+  console.log(chalk.gray(`  ${stepNumber}. Add components using:`))
   console.log(chalk.white('     npx vasig-ui-vue add button'))
   console.log(chalk.white('     npx vasig-ui-vue add badge'))
-  console.log(chalk.gray('  5. Configuration summary:'))
-  console.log(chalk.gray(`     Components: ${finalOptions.dir}`))
-  console.log(chalk.gray(`     Utils: ${finalOptions.utilsDir}`))
+  console.log(chalk.white('     npx vasig-ui-vue add input'))
+  console.log(chalk.white('     npx vasig-ui-vue add card'))
+  console.log(chalk.gray('     ... and more! Use "npx vasig-ui-vue list" to see all available components'))
+  
+  console.log(chalk.cyan('\n📋 Configuration summary:'))
+  console.log(chalk.gray(`     Components directory: ${finalOptions.dir}`))
+  console.log(chalk.gray(`     Utils directory: ${finalOptions.utilsDir}`))
   console.log(chalk.gray(`     Components alias: ${finalOptions.componentsAlias}`))
   console.log(chalk.gray(`     Utils alias: ${finalOptions.utilsAlias}`))
-  console.log(chalk.gray(`     Dark mode: ${finalOptions.enableDarkMode ? 'Enabled' : 'Disabled'}`))
-  console.log(chalk.gray(`     Custom gray: ${finalOptions.useCustomGray ? 'Enabled' : 'Disabled'}\n`))
+  if (finalOptions.installTailwind) {
+    console.log(chalk.gray(`     CSS file: ${finalOptions.css}`))
+    console.log(chalk.gray(`     Dark mode: ${finalOptions.enableDarkMode ? 'Enabled' : 'Disabled'}`))
+    console.log(chalk.gray(`     Custom gray: ${finalOptions.useCustomGray ? 'Enabled' : 'Disabled'}`))
+  } else {
+    console.log(chalk.gray(`     Tailwind CSS: Not configured (skipped)`))
+  }
+  console.log('')
 }

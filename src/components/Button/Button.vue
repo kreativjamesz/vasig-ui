@@ -7,11 +7,16 @@
         'px-2 py-0.5 text-xs': size === 'small',
         'px-3 py-1.5 text-sm': size === 'medium',
         'px-4 py-2 text-sm': size === 'large',
-        // Variants
+        // Variants - Style variants
         'bg-primary text-white hover:bg-primary-hover focus-visible:ring-primary': variant === 'primary',
         'bg-secondary text-white hover:bg-secondary-hover focus-visible:ring-secondary': variant === 'secondary',
         'bg-transparent border border-primary text-primary hover:bg-primary hover:text-white focus-visible:ring-primary': variant === 'outline',
         'bg-transparent text-primary hover:bg-gray-100 dark:hover:bg-gray-800 focus-visible:ring-primary': variant === 'ghost',
+        // Variants - Semantic colors
+        'bg-green-600 text-white hover:bg-green-700 focus-visible:ring-green-500': variant === 'success',
+        'bg-yellow-600 text-white hover:bg-yellow-700 focus-visible:ring-yellow-500': variant === 'warning',
+        'bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-500': variant === 'destructive',
+        'bg-blue-600 text-white hover:bg-blue-700 focus-visible:ring-blue-500': variant === 'info',
         // States
         'opacity-50 cursor-not-allowed': disabled || loading,
         'pointer-events-none': loading,

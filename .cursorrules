@@ -22,3 +22,10 @@
 - Support both interactive mode and command-line flags
 - Always save configuration to vasig.json
 - Provide helpful error messages and next steps
+
+## Component Synchronization
+- **CRITICAL: Any changes made to components in `src/components/` MUST also be applied to `cli/templates/`**
+- When updating a component (Component.vue or types.ts), update the corresponding template in `cli/templates/`
+- CLI templates should match the source components exactly (except import paths use `@/utils/cn` instead of `@/utils/cn`)
+- After updating templates, rebuild the CLI: `cd cli && npm run build`
+- This ensures users installing via CLI get the same components as the library version

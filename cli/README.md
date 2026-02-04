@@ -20,24 +20,26 @@ npx vasig-ui-vue init
 
 This will start an interactive setup process that asks you:
 
-1. **Where would you like to install your components?** (default: `src/components/vasig`)
-2. **Where is your global CSS file?** (default: `src/style.css`)
-3. **Where would you like to install your utils?** (auto-suggested based on components directory)
-4. **Configure the import alias for components?** (default: `@/components`)
-5. **Configure the import alias for utils?** (default: `@/utils`)
-6. **Would you like to configure dark mode variant?** (default: `yes`)
-7. **Would you like to use custom neutral gray colors?** (default: `yes`)
+1. **Where would you like to install your components?** 
+   - Default: `src/components/vasig` (or `resources/js/components/vasig` for Laravel)
+2. **Do you want to install/configure Tailwind CSS in your global CSS file?** (default: `yes`)
+   - If yes, asks: **Where is your global CSS file?** (default: `src/style.css` or `resources/css/app.css` for Laravel)
+   - If yes, asks: **Would you like to configure dark mode variant?** (default: `yes`)
+   - If yes, asks: **Would you like to use custom neutral gray colors?** (default: `yes`)
+3. **Configure the import alias for components?** (default: `@/components`)
+4. **Configure the import alias for utils?** (default: `@/utils`)
 
 The setup will:
+- **Detect Laravel projects** automatically and use Laravel-specific defaults
 - Create a `vasig.json` config file
 - Create a components directory
 - Create a `utils/cn.ts` utility file for class merging
 - Configure import aliases in `tsconfig.json` and `vite.config.ts`
-- Add Tailwind CSS v4 and theme variables to your CSS file
-- Configure dark mode variant (if enabled)
-- Add custom neutral gray colors (if enabled)
+- Optionally add Tailwind CSS v4 and theme variables to your CSS file
+- Configure dark mode variant (if Tailwind CSS is installed)
+- Add custom neutral gray colors (if Tailwind CSS is installed)
 
-**Note:** You can skip the interactive prompts by using flags:
+**Note:** The CLI automatically detects Laravel projects and suggests appropriate paths. You can also skip some prompts by using flags:
 ```bash
 npx vasig-ui-vue init --dir src/components/my-custom-dir --css src/styles/custom.css
 ```
@@ -139,13 +141,33 @@ npm install
 npm run build
 ```
 
-## Available Components
+## Available Components (19 total)
 
-- `button` - Versatile button component
-- `modal` - Flexible modal dialog
-- `card` - Card container component
-- `alert` - Alert/notification component
+**Form Components:**
+- `button` - Button with style and semantic variants
+- `input` - Text input with validation
+- `textarea` - Multi-line text input
+- `checkbox` - Checkbox with label
+- `radio` - Radio button with label
+- `switch` - Toggle switch
+- `label` - Form label component
+
+**Layout Components:**
+- `card` - Card container with header/footer
 - `container` - Responsive container
-- `toast` - Toast notification
-- `input` - Form input component
+- `separator` - Horizontal/vertical divider
 - `badge` - Badge/pill component with variants
+
+**Feedback Components:**
+- `alert` - Alert/notification component
+- `toast` - Toast notification
+- `modal` - Flexible modal dialog
+- `tooltip` - Hover tooltip
+- `progress` - Progress bar
+- `spinner` - Loading spinner
+- `skeleton` - Loading skeleton
+
+**Display Components:**
+- `avatar` - User avatar with badge support
+
+Use `npx vasig-ui-vue list` to see all available components.

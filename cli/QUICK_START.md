@@ -66,30 +66,42 @@ import Button from './components/ui/button/Button.vue'
 </template>
 ```
 
-## Available Components
+## Available Components (19 total)
 
-- `button`
-- `modal`
-- `card`
-- `alert`
-- `container`
-- `toast`
-- `input`
+- `alert`, `avatar`, `badge`, `button`, `card`, `checkbox`, `container`
+- `input`, `label`, `modal`, `progress`, `radio`, `separator`
+- `skeleton`, `spinner`, `switch`, `textarea`, `toast`, `tooltip`
+
+Use `vasig-ui-vue list` to see all available components.
 
 ## Publishing to NPM (When Ready)
+
+**IMPORTANT: Always use OTP when publishing!**
 
 1. **Login to NPM:**
 ```bash
 npm login
 ```
 
-2. **Publish:**
+2. **Build the CLI:**
 ```bash
 cd cli
-npm publish --access public
+npm run build
 ```
 
-3. **Then users can use:**
+3. **Get OTP code from your authenticator app** (Google Authenticator, Authy, etc.)
+
+4. **Publish with OTP:**
+```bash
+npm publish --otp=<your-6-digit-code> --access public
+```
+
+Example:
+```bash
+npm publish --otp=123456 --access public
+```
+
+5. **Then users can use:**
 ```bash
 npx vasig-ui-vue init
 npx vasig-ui-vue add button
