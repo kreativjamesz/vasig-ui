@@ -93,13 +93,16 @@ npm run build
 
 4. **Publish with OTP:**
 ```bash
+# CLI package (vasig-ui-vue) - NOT scoped, public by default
+npm publish --otp=<your-6-digit-code>
+
+# Main library (@vasig/ui) - scoped, requires --access public  
 npm publish --otp=<your-6-digit-code> --access public
 ```
 
-Example:
-```bash
-npm publish --otp=123456 --access public
-```
+**Note:** 
+- `vasig-ui-vue` is NOT scoped → public by default → `--access public` is optional
+- `@vasig/ui` IS scoped → defaults to private → `--access public` is REQUIRED
 
 5. **Then users can use:**
 ```bash

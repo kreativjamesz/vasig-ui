@@ -127,14 +127,25 @@ npm run build
 
 4. **Publish with OTP:**
 ```bash
+# For CLI package (vasig-ui-vue) - NOT scoped, public by default
+npm publish --otp=<your-6-digit-code>
+
+# For main library (@vasig/ui) - scoped, requires --access public
 npm publish --otp=<your-6-digit-code> --access public
 ```
 
 **Example:**
 ```bash
-# If your OTP code is 123456
+# CLI package (vasig-ui-vue) - no --access needed
+npm publish --otp=123456
+
+# Main library (@vasig/ui) - --access public required
 npm publish --otp=123456 --access public
 ```
+
+**Note:** 
+- Scoped packages (`@vasig/ui`) default to private, so `--access public` is REQUIRED
+- Non-scoped packages (`vasig-ui-vue`) are public by default, so `--access public` is optional
 
 5. **Verify publication:**
 ```bash
@@ -149,6 +160,7 @@ npx vasig-ui-vue init
 npx vasig-ui-vue add button
 npx vasig-ui-vue list
 ```
+
 
 ### Troubleshooting OTP:
 
