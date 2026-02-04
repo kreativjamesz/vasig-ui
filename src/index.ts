@@ -6,9 +6,10 @@ import Alert from './components/Alert/Alert.vue'
 import Container from './components/Container/Container.vue'
 import Toast from './components/Toast/Toast.vue'
 import Input from './components/Input/Input.vue'
+import Badge from './components/Badge/Badge.vue'
 
 // Export components
-export { Button, Modal, Card, Alert, Container, Toast, Input }
+export { Button, Modal, Card, Alert, Container, Toast, Input, Badge }
 
 // Export types
 export type { ButtonProps } from './components/Button/types'
@@ -18,6 +19,7 @@ export type { AlertProps } from './components/Alert/types'
 export type { ContainerProps } from './components/Container/types'
 export type { ToastProps } from './components/Toast/types'
 export type { InputProps } from './components/Input/types'
+export type { BadgeProps } from './components/Badge/types'
 
 // Plugin installation
 const components = {
@@ -27,7 +29,8 @@ const components = {
   Alert,
   Container,
   Toast,
-  Input
+  Input,
+  Badge
 }
 
 export default {

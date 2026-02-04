@@ -21,8 +21,8 @@ program
 program
   .command('init')
   .description('Initialize Vasig UI in your project')
-  .option('-d, --dir <directory>', 'Components directory', 'src/components/vasig')
-  .option('-c, --css <file>', 'CSS file path', 'src/style.css')
+  .option('-d, --dir <directory>', 'Components directory (skips interactive prompt)')
+  .option('-c, --css <file>', 'CSS file path (skips interactive prompt)')
   .action(initCommand)
 
 program

@@ -18,16 +18,28 @@ npx vasig-ui-vue
 npx vasig-ui-vue init
 ```
 
-This will:
-- Create a `vasig.json` config file
-- Create a components directory (default: `src/components/vasig`)
-- Create a `utils/cn.ts` utility file for class merging
-- Configure `@` path alias in `tsconfig.json` and `vite.config.ts`
-- Add CSS variables to your CSS file
+This will start an interactive setup process that asks you:
 
-**Note:** The default directory is `src/components/vasig` to avoid conflicts with other UI libraries. You can customize it:
+1. **Where would you like to install your components?** (default: `src/components/vasig`)
+2. **Where is your global CSS file?** (default: `src/style.css`)
+3. **Where would you like to install your utils?** (auto-suggested based on components directory)
+4. **Configure the import alias for components?** (default: `@/components`)
+5. **Configure the import alias for utils?** (default: `@/utils`)
+6. **Would you like to configure dark mode variant?** (default: `yes`)
+7. **Would you like to use custom neutral gray colors?** (default: `yes`)
+
+The setup will:
+- Create a `vasig.json` config file
+- Create a components directory
+- Create a `utils/cn.ts` utility file for class merging
+- Configure import aliases in `tsconfig.json` and `vite.config.ts`
+- Add Tailwind CSS v4 and theme variables to your CSS file
+- Configure dark mode variant (if enabled)
+- Add custom neutral gray colors (if enabled)
+
+**Note:** You can skip the interactive prompts by using flags:
 ```bash
-npx vasig-ui-vue init --dir src/components/my-custom-dir
+npx vasig-ui-vue init --dir src/components/my-custom-dir --css src/styles/custom.css
 ```
 
 ### Add a component
@@ -136,3 +148,4 @@ npm run build
 - `container` - Responsive container
 - `toast` - Toast notification
 - `input` - Form input component
+- `badge` - Badge/pill component with variants

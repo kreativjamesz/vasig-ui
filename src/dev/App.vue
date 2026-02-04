@@ -1,5 +1,5 @@
 <template>
-  <div :class="['min-h-screen transition-colors', isDark ? 'dark bg-gray-900' : 'bg-gray-50']">
+  <div :class="['min-h-screen transition-colors', isDark ? 'dark' : '']">
     <!-- Header -->
     <header class="sticky top-0 z-50 border-b bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-gray-200 dark:border-gray-800">
       <div class="container mx-auto px-4 py-4 flex items-center justify-between">
@@ -175,6 +175,41 @@
         </div>
       </section>
 
+      <!-- Badge Section -->
+      <section class="mb-12">
+        <h2 class="text-3xl font-bold mb-6 text-gray-900 dark:text-white">Badge</h2>
+        <div class="space-y-6">
+          <div>
+            <h3 class="text-lg font-semibold mb-4 text-gray-700 dark:text-gray-300">Variants</h3>
+            <div class="flex flex-wrap items-center gap-3">
+              <Badge variant="default">Default</Badge>
+              <Badge variant="primary">Primary</Badge>
+              <Badge variant="secondary">Secondary</Badge>
+              <Badge variant="success">Success</Badge>
+              <Badge variant="warning">Warning</Badge>
+              <Badge variant="error">Error</Badge>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="text-lg font-semibold mb-4 text-gray-700 dark:text-gray-300">Sizes</h3>
+            <div class="flex flex-wrap items-center gap-3">
+              <Badge size="small">Small</Badge>
+              <Badge size="medium">Medium</Badge>
+            </div>
+          </div>
+
+          <div>
+            <h3 class="text-lg font-semibold mb-4 text-gray-700 dark:text-gray-300">Closable</h3>
+            <div class="flex flex-wrap items-center gap-3">
+              <Badge variant="default" closable @close="() => {}">Closable</Badge>
+              <Badge variant="primary" closable @close="() => {}">Primary</Badge>
+              <Badge variant="success" closable @close="() => {}">Success</Badge>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- Toast Section -->
       <section class="mb-12">
         <h2 class="text-3xl font-bold mb-6 text-gray-900 dark:text-white">Toast</h2>
@@ -218,6 +253,7 @@ import Alert from '../components/Alert/Alert.vue'
 import Container from '../components/Container/Container.vue'
 import Toast from '../components/Toast/Toast.vue'
 import Input from '../components/Input/Input.vue'
+import Badge from '../components/Badge/Badge.vue'
 
 const isDark = ref(false)
 const showModal = ref(false)

@@ -2,8 +2,8 @@
 
 @theme {
   /* Primary Colors */
-  --color-primary: #009ba7;
-  --color-primary-hover: #007a84;
+  --color-primary: #42b983;
+  --color-primary-hover: #35a372;
   
   /* Secondary Colors */
   --color-secondary: #6b7280;
@@ -12,6 +12,18 @@
   /* Error Colors */
   --color-error: #ef4444;
   --color-error-hover: #dc2626;
+  
+  /* Gray Scale - Override Tailwind's default blue-tinted gray */
+  --color-gray-50: #f9fafb;
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb;
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #262626;
+  --color-gray-900: #1a1a1a;
 }
 
 @variant dark (&:where(.dark, .dark *));
@@ -31,7 +43,7 @@ html:not(.dark) {
 }
 
 html.dark {
-  background-color: #111827;
+  background-color: #1a1a1a;
   color: #f9fafb;
 }
 

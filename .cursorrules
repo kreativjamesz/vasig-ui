@@ -1,0 +1,24 @@
+# Cursor Rules for Vasig UI
+
+## NPM Publishing
+- **ALWAYS require OTP (One-Time Password) when publishing to NPM**
+- Use `npm publish --otp=<otp-code>` or ensure 2FA is enabled
+- Never publish without OTP verification
+- Always verify the package version before publishing
+
+## Code Style
+- Use Taglish when communicating with the user
+- Follow existing code patterns and conventions
+- Maintain consistency with Vue 3 + TypeScript + Tailwind CSS v4 setup
+
+## Component Development
+- All components should support dark mode
+- Use the `cn()` utility for class merging
+- Follow the existing component structure (Component.vue + types.ts)
+- Export components and types in src/index.ts
+
+## CLI Development
+- Interactive prompts should use inquirer
+- Support both interactive mode and command-line flags
+- Always save configuration to vasig.json
+- Provide helpful error messages and next steps
