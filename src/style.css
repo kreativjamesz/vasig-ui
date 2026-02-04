@@ -1,29 +1,42 @@
-:root {
+@import "tailwindcss";
+
+@theme {
   /* Primary Colors */
-  --vasig-primary: #3b82f6;
-  --vasig-primary-hover: #2563eb;
+  --color-primary: #009ba7;
+  --color-primary-hover: #007a84;
   
   /* Secondary Colors */
-  --vasig-secondary: #6b7280;
-  --vasig-secondary-hover: #4b5563;
+  --color-secondary: #6b7280;
+  --color-secondary-hover: #4b5563;
   
   /* Error Colors */
-  --vasig-error: #ef4444;
-  --vasig-error-hover: #dc2626;
-  
-  /* Gray Scale */
-  --vasig-gray-50: #f9fafb;
-  --vasig-gray-100: #f3f4f6;
-  --vasig-gray-200: #e5e7eb;
-  --vasig-gray-300: #d1d5db;
-  --vasig-gray-400: #9ca3af;
-  --vasig-gray-500: #6b7280;
-  --vasig-gray-600: #4b5563;
-  --vasig-gray-700: #374151;
-  --vasig-gray-800: #1f2937;
-  --vasig-gray-900: #111827;
+  --color-error: #ef4444;
+  --color-error-hover: #dc2626;
 }
+
+@variant dark (&:where(.dark, .dark *));
+
 
 * {
   box-sizing: border-box;
+}
+
+html {
+  color-scheme: light dark;
+}
+
+html:not(.dark) {
+  background-color: #f9fafb;
+  color: #111827;
+}
+
+html.dark {
+  background-color: #111827;
+  color: #f9fafb;
+}
+
+body {
+  background-color: inherit;
+  color: inherit;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }

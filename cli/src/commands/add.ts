@@ -39,16 +39,36 @@ export async function addCommand(componentName: string, options: { overwrite: bo
 
   console.log(chalk.blue(`📦 Adding ${componentKey} component...\n`))
 
+  // Find package root
+  let packageRoot: string | null = null
+  let currentDir = __dirname
+  const root = path.parse(currentDir).root
+  
+  while (currentDir !== root) {
+    const packageJsonPath = path.join(currentDir, 'package.json')
+    if (await fs.pathExists(packageJsonPath)) {
+      try {
+        const pkg = await fs.readJSON(packageJsonPath)
+        if (pkg.name === 'vasig-ui-vue') {
+          packageRoot = currentDir
+          break
+        }
+      } catch {
+        // Continue searching
+      }
+    }
+    currentDir = path.dirname(currentDir)
+  }
+
   // Source and destination paths - try multiple possible locations
-  // When installed via npm: node_modules/vasig-ui-vue/dist/commands/add.js
-  // When in development: cli/dist/commands/add.js
   const possibleTemplatePaths = [
+    packageRoot ? path.resolve(packageRoot, 'templates', componentKey) : null, // From package root
     path.resolve(__dirname, '../../templates', componentKey), // npm install: dist/commands -> dist -> package root -> templates
     path.resolve(__dirname, '../../../templates', componentKey), // fallback
     path.resolve(process.cwd(), 'node_modules/vasig-ui-vue/templates', componentKey), // absolute npm path
     path.resolve(process.cwd(), 'cli/templates', componentKey), // local dev
     path.resolve(process.cwd(), 'templates', componentKey) // fallback
-  ]
+  ].filter((p): p is string => p !== null)
   
   let templateDir = ''
   for (const possiblePath of possibleTemplatePaths) {

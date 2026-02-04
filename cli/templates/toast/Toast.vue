@@ -1,36 +1,54 @@
 <template>
   <Teleport to="body">
-    <Transition name="vasig-toast">
+    <Transition
+      enter-active-class="transition-all duration-300"
+      enter-from-class="opacity-0 translate-y-[-10px] scale-95"
+      enter-to-class="opacity-100 translate-y-0 scale-100"
+      leave-active-class="transition-all duration-300"
+      leave-from-class="opacity-100 translate-y-0 scale-100"
+      leave-to-class="opacity-0 translate-y-[-10px] scale-95"
+    >
       <div
         v-if="modelValue"
-        class="vasig-toast-container"
-        :class="`vasig-toast-container--${position}`"
+        :class="cn(
+          'fixed z-[9999] pointer-events-none',
+          {
+            'top-4 left-4': position === 'top-left',
+            'top-4 left-1/2 -translate-x-1/2': position === 'top-center',
+            'top-4 right-4': position === 'top-right',
+            'bottom-4 left-4': position === 'bottom-left',
+            'bottom-4 left-1/2 -translate-x-1/2': position === 'bottom-center',
+            'bottom-4 right-4': position === 'bottom-right'
+          }
+        )"
       >
         <div
-          :class="[
-            'vasig-toast',
-            `vasig-toast--${type}`,
+          :class="cn(
+            'flex items-start gap-3 min-w-[300px] max-w-[500px] p-4 rounded-lg shadow-lg bg-white dark:bg-gray-800 border pointer-events-auto',
             {
-              'vasig-toast--closable': closable
+              'border-blue-200 dark:border-blue-800 text-blue-900 dark:text-blue-200': type === 'info',
+              'border-green-200 dark:border-green-800 text-green-900 dark:text-green-200': type === 'success',
+              'border-yellow-200 dark:border-yellow-800 text-yellow-900 dark:text-yellow-200': type === 'warning',
+              'border-red-200 dark:border-red-800 text-red-900 dark:text-red-200': type === 'error'
             }
-          ]"
+          )"
           role="alert"
         >
-          <div class="vasig-toast__icon" v-if="showIcon">
+          <div v-if="showIcon" class="flex-shrink-0 w-5 h-5 flex items-center justify-center font-bold">
             <slot name="icon">
-              <span class="vasig-toast__icon-default">{{ iconText }}</span>
+              <span>{{ iconText }}</span>
             </slot>
           </div>
-          <div class="vasig-toast__content">
-            <div v-if="title" class="vasig-toast__title">{{ title }}</div>
-            <div class="vasig-toast__message">
+          <div class="flex-1 min-w-0">
+            <div v-if="title" class="mb-1 text-sm font-semibold">{{ title }}</div>
+            <div class="text-sm leading-relaxed">
               <slot>{{ message }}</slot>
             </div>
           </div>
           <button
             v-if="closable"
-            class="vasig-toast__close"
             @click="handleClose"
+            class="flex-shrink-0 w-5 h-5 flex items-center justify-center opacity-50 hover:opacity-100 transition-opacity text-xl leading-none text-current"
             aria-label="Close toast"
           >
             ×
@@ -43,6 +61,7 @@
 
 <script setup lang="ts">
 import { computed, watch, onMounted } from 'vue'
+import { cn } from '@/utils/cn'
 import type { ToastProps } from './types'
 
 const props = withDefaults(defineProps<ToastProps>(), {
@@ -100,166 +119,3 @@ onMounted(() => {
   }
 })
 </script>
-
-<style scoped>
-.vasig-toast-container {
-  position: fixed;
-  z-index: 9999;
-  pointer-events: none;
-}
-
-.vasig-toast-container--top-left {
-  top: 1rem;
-  left: 1rem;
-}
-
-.vasig-toast-container--top-center {
-  top: 1rem;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.vasig-toast-container--top-right {
-  top: 1rem;
-  right: 1rem;
-}
-
-.vasig-toast-container--bottom-left {
-  bottom: 1rem;
-  left: 1rem;
-}
-
-.vasig-toast-container--bottom-center {
-  bottom: 1rem;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.vasig-toast-container--bottom-right {
-  bottom: 1rem;
-  right: 1rem;
-}
-
-.vasig-toast {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-  min-width: 300px;
-  max-width: 500px;
-  padding: 1rem 1.25rem;
-  border-radius: 0.5rem;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  background: white;
-  border: 1px solid;
-  pointer-events: auto;
-}
-
-.vasig-toast__icon {
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.25rem;
-  height: 1.25rem;
-  font-size: 1rem;
-  font-weight: bold;
-}
-
-.vasig-toast__icon-default {
-  line-height: 1;
-}
-
-.vasig-toast__content {
-  flex: 1;
-  min-width: 0;
-}
-
-.vasig-toast__title {
-  margin-bottom: 0.25rem;
-  font-size: 0.875rem;
-  font-weight: 600;
-}
-
-.vasig-toast__message {
-  font-size: 0.875rem;
-  line-height: 1.5;
-}
-
-.vasig-toast__close {
-  flex-shrink: 0;
-  background: none;
-  border: none;
-  font-size: 1.25rem;
-  line-height: 1;
-  cursor: pointer;
-  padding: 0;
-  width: 1.25rem;
-  height: 1.25rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0.5;
-  transition: opacity 0.2s;
-  color: inherit;
-}
-
-.vasig-toast__close:hover {
-  opacity: 1;
-}
-
-/* Info variant */
-.vasig-toast--info {
-  border-color: #bfdbfe;
-  color: #1e40af;
-}
-
-.vasig-toast--info .vasig-toast__icon {
-  color: #3b82f6;
-}
-
-/* Success variant */
-.vasig-toast--success {
-  border-color: #bbf7d0;
-  color: #166534;
-}
-
-.vasig-toast--success .vasig-toast__icon {
-  color: #22c55e;
-}
-
-/* Warning variant */
-.vasig-toast--warning {
-  border-color: #fde68a;
-  color: #92400e;
-}
-
-.vasig-toast--warning .vasig-toast__icon {
-  color: #f59e0b;
-}
-
-/* Error variant */
-.vasig-toast--error {
-  border-color: #fecaca;
-  color: #991b1b;
-}
-
-.vasig-toast--error .vasig-toast__icon {
-  color: #ef4444;
-}
-
-/* Transitions */
-.vasig-toast-enter-active,
-.vasig-toast-leave-active {
-  transition: all 0.3s ease;
-}
-
-.vasig-toast-enter-from {
-  opacity: 0;
-  transform: translateY(-10px) scale(0.95);
-}
-
-.vasig-toast-leave-to {
-  opacity: 0;
-  transform: translateY(-10px) scale(0.95);
-}
-</style>

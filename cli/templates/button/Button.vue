@@ -1,24 +1,53 @@
 <template>
   <button
-    :class="[
-      'vasig-button',
-      `vasig-button--${variant}`,
-      `vasig-button--${size}`,
+    :class="cn(
+      'inline-flex items-center justify-center gap-2 font-medium rounded-md transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
       {
-        'vasig-button--disabled': disabled,
-        'vasig-button--loading': loading,
-        'vasig-button--block': block
+        // Sizes
+        'px-3 py-1.5 text-xs': size === 'small',
+        'px-5 py-2.5 text-sm': size === 'medium',
+        'px-6 py-3 text-base': size === 'large',
+        // Variants
+        'bg-primary text-white hover:bg-primary-hover focus-visible:ring-primary': variant === 'primary',
+        'bg-secondary text-white hover:bg-secondary-hover focus-visible:ring-secondary': variant === 'secondary',
+        'bg-transparent border border-primary text-primary hover:bg-primary hover:text-white focus-visible:ring-primary': variant === 'outline',
+        'bg-transparent text-primary hover:bg-gray-100 dark:hover:bg-gray-800 focus-visible:ring-primary': variant === 'ghost',
+        // States
+        'opacity-50 cursor-not-allowed': disabled || loading,
+        'pointer-events-none': loading,
+        'w-full': block
       }
-    ]"
+    )"
     :disabled="disabled || loading"
     @click="handleClick"
   >
-    <span v-if="loading" class="vasig-button__spinner"></span>
+    <svg
+      v-if="loading"
+      class="animate-spin h-4 w-4"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+    >
+      <circle
+        class="opacity-25"
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="currentColor"
+        stroke-width="4"
+      />
+      <path
+        class="opacity-75"
+        fill="currentColor"
+        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+      />
+    </svg>
     <slot />
   </button>
 </template>
 
 <script setup lang="ts">
+import { cn } from '@/utils/cn'
 import type { ButtonProps } from './types'
 
 withDefaults(defineProps<ButtonProps>(), {
@@ -37,109 +66,3 @@ const handleClick = (event: MouseEvent) => {
   emit('click', event)
 }
 </script>
-
-<style scoped>
-.vasig-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.625rem 1.25rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  line-height: 1.5;
-  border: 1px solid transparent;
-  border-radius: 0.375rem;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  font-family: inherit;
-  outline: none;
-}
-
-.vasig-button:focus-visible {
-  outline: 2px solid var(--vasig-primary, #3b82f6);
-  outline-offset: 2px;
-}
-
-.vasig-button--small {
-  padding: 0.375rem 0.75rem;
-  font-size: 0.75rem;
-}
-
-.vasig-button--medium {
-  padding: 0.625rem 1.25rem;
-  font-size: 0.875rem;
-}
-
-.vasig-button--large {
-  padding: 0.75rem 1.5rem;
-  font-size: 1rem;
-}
-
-.vasig-button--primary {
-  background-color: var(--vasig-primary, #3b82f6);
-  color: white;
-}
-
-.vasig-button--primary:hover:not(:disabled) {
-  background-color: var(--vasig-primary-hover, #2563eb);
-}
-
-.vasig-button--secondary {
-  background-color: var(--vasig-secondary, #6b7280);
-  color: white;
-}
-
-.vasig-button--secondary:hover:not(:disabled) {
-  background-color: var(--vasig-secondary-hover, #4b5563);
-}
-
-.vasig-button--outline {
-  background-color: transparent;
-  border-color: var(--vasig-primary, #3b82f6);
-  color: var(--vasig-primary, #3b82f6);
-}
-
-.vasig-button--outline:hover:not(:disabled) {
-  background-color: var(--vasig-primary, #3b82f6);
-  color: white;
-}
-
-.vasig-button--ghost {
-  background-color: transparent;
-  color: var(--vasig-primary, #3b82f6);
-}
-
-.vasig-button--ghost:hover:not(:disabled) {
-  background-color: var(--vasig-gray-100, #f3f4f6);
-}
-
-.vasig-button--disabled,
-.vasig-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.vasig-button--block {
-  width: 100%;
-}
-
-.vasig-button--loading {
-  pointer-events: none;
-}
-
-.vasig-button__spinner {
-  width: 1rem;
-  height: 1rem;
-  border: 2px solid currentColor;
-  border-top-color: transparent;
-  border-radius: 50%;
-  animation: spin 0.6s linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-</style>

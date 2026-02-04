@@ -1,46 +1,65 @@
 <template>
   <Teleport to="body">
-    <Transition name="vasig-modal">
+    <Transition
+      enter-active-class="transition-opacity duration-300"
+      enter-from-class="opacity-0"
+      enter-to-class="opacity-100"
+      leave-active-class="transition-opacity duration-300"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0"
+    >
       <div
         v-if="modelValue"
-        class="vasig-modal-overlay"
+        class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
         @click.self="handleOverlayClick"
       >
-        <div
-          :class="[
-            'vasig-modal',
-            `vasig-modal--${size}`,
-            {
-              'vasig-modal--centered': centered
-            }
-          ]"
+        <Transition
+          enter-active-class="transition-all duration-300"
+          enter-from-class="opacity-0 scale-95"
+          enter-to-class="opacity-100 scale-100"
+          leave-active-class="transition-all duration-300"
+          leave-from-class="opacity-100 scale-100"
+          leave-to-class="opacity-0 scale-95"
         >
-          <div class="vasig-modal__header" v-if="title || $slots.header">
-            <slot name="header">
-              <h3 class="vasig-modal__title">{{ title }}</h3>
-            </slot>
-            <button
-              v-if="closable"
-              class="vasig-modal__close"
-              @click="handleClose"
-              aria-label="Close modal"
-            >
-              ×
-            </button>
+          <div
+            v-if="modelValue"
+            :class="cn(
+              'bg-white dark:bg-gray-800 rounded-lg shadow-xl flex flex-col max-h-[90vh] max-w-full overflow-hidden',
+              {
+                'max-w-sm': size === 'small',
+                'max-w-md': size === 'medium',
+                'max-w-2xl': size === 'large'
+              }
+            )"
+          >
+            <div v-if="title || $slots.header" class="flex items-center justify-between p-5 border-b border-gray-200 dark:border-gray-700">
+              <slot name="header">
+                <h3 v-if="title" class="text-xl font-semibold text-gray-900 dark:text-white">{{ title }}</h3>
+              </slot>
+              <button
+                v-if="closable"
+                @click="handleClose"
+                class="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white text-2xl leading-none p-1 transition-colors"
+                aria-label="Close modal"
+              >
+                ×
+              </button>
+            </div>
+            <div class="p-6 overflow-y-auto flex-1">
+              <slot />
+            </div>
+            <div v-if="$slots.footer" class="p-4 border-t border-gray-200 dark:border-gray-700 flex justify-end gap-3">
+              <slot name="footer" />
+            </div>
           </div>
-          <div class="vasig-modal__body">
-            <slot />
-          </div>
-          <div class="vasig-modal__footer" v-if="$slots.footer">
-            <slot name="footer" />
-          </div>
-        </div>
+        </Transition>
       </div>
     </Transition>
   </Teleport>
 </template>
 
 <script setup lang="ts">
+import { cn } from '@/utils/cn'
 import type { ModalProps } from './types'
 
 const props = withDefaults(defineProps<ModalProps>(), {
@@ -66,119 +85,3 @@ const handleOverlayClick = () => {
   }
 }
 </script>
-
-<style scoped>
-.vasig-modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  padding: 1rem;
-}
-
-.vasig-modal {
-  background: white;
-  border-radius: 0.5rem;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
-    0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  display: flex;
-  flex-direction: column;
-  max-height: 90vh;
-  max-width: 100%;
-  overflow: hidden;
-}
-
-.vasig-modal--small {
-  width: 100%;
-  max-width: 24rem;
-}
-
-.vasig-modal--medium {
-  width: 100%;
-  max-width: 32rem;
-}
-
-.vasig-modal--large {
-  width: 100%;
-  max-width: 48rem;
-}
-
-.vasig-modal--centered {
-  margin: auto;
-}
-
-.vasig-modal__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid var(--vasig-gray-200, #e5e7eb);
-}
-
-.vasig-modal__title {
-  margin: 0;
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--vasig-gray-900, #111827);
-}
-
-.vasig-modal__close {
-  background: none;
-  border: none;
-  font-size: 1.5rem;
-  line-height: 1;
-  color: var(--vasig-gray-500, #6b7280);
-  cursor: pointer;
-  padding: 0.25rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: color 0.2s;
-}
-
-.vasig-modal__close:hover {
-  color: var(--vasig-gray-900, #111827);
-}
-
-.vasig-modal__body {
-  padding: 1.5rem;
-  overflow-y: auto;
-  flex: 1;
-}
-
-.vasig-modal__footer {
-  padding: 1rem 1.5rem;
-  border-top: 1px solid var(--vasig-gray-200, #e5e7eb);
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.75rem;
-}
-
-/* Transition animations */
-.vasig-modal-enter-active,
-.vasig-modal-leave-active {
-  transition: opacity 0.3s ease;
-}
-
-.vasig-modal-enter-active .vasig-modal,
-.vasig-modal-leave-active .vasig-modal {
-  transition: transform 0.3s ease, opacity 0.3s ease;
-}
-
-.vasig-modal-enter-from,
-.vasig-modal-leave-to {
-  opacity: 0;
-}
-
-.vasig-modal-enter-from .vasig-modal,
-.vasig-modal-leave-to .vasig-modal {
-  transform: scale(0.95);
-  opacity: 0;
-}
-</style>

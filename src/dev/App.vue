@@ -1,57 +1,96 @@
 <template>
-  <div class="dev-container">
-    <header class="dev-header">
-      <h1>Vasig UI - Component Playground</h1>
-      <p>A clean, modern UI kit for Vue 3 + TypeScript</p>
+  <div :class="['min-h-screen transition-colors', isDark ? 'dark bg-gray-900' : 'bg-gray-50']">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 border-b bg-white/80 dark:bg-gray-900/80 backdrop-blur-sm border-gray-200 dark:border-gray-800">
+      <div class="container mx-auto px-4 py-4 flex items-center justify-between">
+        <div>
+          <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Vasig UI Vue</h1>
+          <p class="text-sm text-gray-600 dark:text-gray-400">A clean, modern UI kit for Vue 3</p>
+        </div>
+        <button
+          @click="toggleDark"
+          class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+          aria-label="Toggle dark mode"
+        >
+          <svg
+            v-if="isDark"
+            class="w-6 h-6 text-gray-900 dark:text-white"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"
+            />
+          </svg>
+          <svg
+            v-else
+            class="w-6 h-6 text-gray-900 dark:text-white"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+            />
+          </svg>
+        </button>
+      </div>
     </header>
 
-    <main class="dev-main">
-      <section class="dev-section">
-        <h2>Button Component</h2>
-        <div class="dev-showcase">
-          <div class="dev-group">
-            <h3>Variants</h3>
-            <Button variant="primary">Primary</Button>
-            <Button variant="secondary">Secondary</Button>
-            <Button variant="outline">Outline</Button>
-            <Button variant="ghost">Ghost</Button>
+    <main class="container mx-auto px-4 py-8">
+      <!-- Button Section -->
+      <section class="mb-12">
+        <h2 class="text-3xl font-bold mb-6 text-gray-900 dark:text-white">Button</h2>
+        <div class="space-y-6">
+          <div>
+            <h3 class="text-lg font-semibold mb-4 text-gray-700 dark:text-gray-300">Variants</h3>
+            <div class="flex flex-wrap gap-4">
+              <Button variant="primary">Primary</Button>
+              <Button variant="secondary">Secondary</Button>
+              <Button variant="outline">Outline</Button>
+              <Button variant="ghost">Ghost</Button>
+            </div>
           </div>
 
-          <div class="dev-group">
-            <h3>Sizes</h3>
-            <Button size="small">Small</Button>
-            <Button size="medium">Medium</Button>
-            <Button size="large">Large</Button>
+          <div>
+            <h3 class="text-lg font-semibold mb-4 text-gray-700 dark:text-gray-300">Sizes</h3>
+            <div class="flex flex-wrap items-center gap-4">
+              <Button size="small">Small</Button>
+              <Button size="medium">Medium</Button>
+              <Button size="large">Large</Button>
+            </div>
           </div>
 
-          <div class="dev-group">
-            <h3>States</h3>
-            <Button :loading="true">Loading</Button>
-            <Button disabled>Disabled</Button>
-            <Button block>Block Button</Button>
-          </div>
-
-          <div class="dev-group">
-            <h3>Click Handler</h3>
-            <Button @click="handleButtonClick">Click Me</Button>
-            <p v-if="clickMessage" class="dev-message">{{ clickMessage }}</p>
+          <div>
+            <h3 class="text-lg font-semibold mb-4 text-gray-700 dark:text-gray-300">States</h3>
+            <div class="flex flex-wrap gap-4">
+              <Button :loading="true">Loading</Button>
+              <Button disabled>Disabled</Button>
+              <Button block class="max-w-xs">Block Button</Button>
+            </div>
           </div>
         </div>
       </section>
 
-      <section class="dev-section">
-        <h2>Modal Component</h2>
-        <div class="dev-showcase">
-          <div class="dev-group">
-            <Button @click="showModal = true">Open Modal</Button>
-            <Button @click="showSmallModal = true">Open Small Modal</Button>
-            <Button @click="showLargeModal = true">Open Large Modal</Button>
-          </div>
+      <!-- Modal Section -->
+      <section class="mb-12">
+        <h2 class="text-3xl font-bold mb-6 text-gray-900 dark:text-white">Modal</h2>
+        <div class="flex gap-4">
+          <Button @click="showModal = true">Open Modal</Button>
+          <Button @click="showSmallModal = true">Small Modal</Button>
+          <Button @click="showLargeModal = true">Large Modal</Button>
         </div>
 
         <Modal v-model="showModal" title="Default Modal" @close="handleModalClose">
-          <p>This is a default medium-sized modal with some content.</p>
-          <p>You can add any content here using slots.</p>
+          <p class="text-gray-700 dark:text-gray-300">This is a default medium-sized modal with some content.</p>
+          <p class="text-gray-700 dark:text-gray-300 mt-2">You can add any content here using slots.</p>
           <template #footer>
             <Button variant="outline" @click="showModal = false">Cancel</Button>
             <Button @click="showModal = false">Confirm</Button>
@@ -59,135 +98,91 @@
         </Modal>
 
         <Modal v-model="showSmallModal" title="Small Modal" size="small">
-          <p>This is a small modal.</p>
+          <p class="text-gray-700 dark:text-gray-300">This is a small modal.</p>
         </Modal>
 
         <Modal v-model="showLargeModal" title="Large Modal" size="large">
-          <p>This is a large modal with more space for content.</p>
-          <p>Perfect for forms, detailed information, or complex layouts.</p>
+          <p class="text-gray-700 dark:text-gray-300">This is a large modal with more space for content.</p>
+          <p class="text-gray-700 dark:text-gray-300 mt-2">Perfect for forms, detailed information, or complex layouts.</p>
         </Modal>
       </section>
 
-      <section class="dev-section">
-        <h2>Card Component</h2>
-        <div class="dev-showcase">
-          <div class="dev-group">
-            <h3>Basic Card</h3>
-            <Card title="Card Title">
-              <p>This is a basic card with a title and content.</p>
-            </Card>
-          </div>
+      <!-- Card Section -->
+      <section class="mb-12">
+        <h2 class="text-3xl font-bold mb-6 text-gray-900 dark:text-white">Card</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <Card title="Basic Card">
+            <p class="text-gray-700 dark:text-gray-300">This is a basic card with a title and content.</p>
+          </Card>
 
-          <div class="dev-group">
-            <h3>Card with Footer</h3>
-            <Card title="Card with Footer">
-              <p>This card has a footer section.</p>
-              <template #footer>
-                <Button size="small">Action</Button>
-              </template>
-            </Card>
-          </div>
+          <Card title="Card with Footer">
+            <p class="text-gray-700 dark:text-gray-300">This card has a footer section.</p>
+            <template #footer>
+              <Button size="small">Action</Button>
+            </template>
+          </Card>
 
-          <div class="dev-group">
-            <h3>Hoverable Card</h3>
-            <Card title="Hoverable Card" hoverable>
-              <p>Hover over this card to see the effect.</p>
-            </Card>
-          </div>
-
-          <div class="dev-group">
-            <h3>Card Variants</h3>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
-              <Card :bordered="true" :shadow="false">No Shadow</Card>
-              <Card :bordered="false" :shadow="true">No Border</Card>
-              <Card :bordered="false" :shadow="false">Plain Card</Card>
-            </div>
-          </div>
+          <Card title="Hoverable Card" hoverable>
+            <p class="text-gray-700 dark:text-gray-300">Hover over this card to see the effect.</p>
+          </Card>
         </div>
       </section>
 
-      <section class="dev-section">
-        <h2>Alert Component</h2>
-        <div class="dev-showcase">
-          <div class="dev-group">
-            <h3>Alert Types</h3>
-            <Alert type="success" title="Success!" closable @close="showAlert = false">
-              Operation completed successfully.
-            </Alert>
-            <Alert type="info" title="Information">
-              Here's some important information for you.
-            </Alert>
-            <Alert type="warning" title="Warning">
-              Please be careful with this action.
-            </Alert>
-            <Alert type="error" title="Error" closable>
-              Something went wrong. Please try again.
-            </Alert>
-          </div>
-
-          <div class="dev-group">
-            <h3>Without Title</h3>
-            <Alert type="success">Simple success message without title.</Alert>
-            <Alert type="info">Simple info message.</Alert>
-          </div>
+      <!-- Alert Section -->
+      <section class="mb-12">
+        <h2 class="text-3xl font-bold mb-6 text-gray-900 dark:text-white">Alert</h2>
+        <div class="space-y-4">
+          <Alert type="success" title="Success!" closable @close="showAlert = false">
+            Operation completed successfully.
+          </Alert>
+          <Alert type="info" title="Information">
+            Here's some important information for you.
+          </Alert>
+          <Alert type="warning" title="Warning">
+            Please be careful with this action.
+          </Alert>
+          <Alert type="error" title="Error" closable>
+            Something went wrong. Please try again.
+          </Alert>
         </div>
       </section>
 
-      <section class="dev-section">
-        <h2>Container Component</h2>
-        <div class="dev-showcase">
-          <div class="dev-group">
-            <h3>Responsive Container</h3>
-            <Container>
-              <div style="background: #f3f4f6; padding: 1rem; border-radius: 0.5rem;">
-                <p>This container automatically adjusts its max-width based on screen size.</p>
-                <p>Try resizing your browser window to see it in action.</p>
-              </div>
-            </Container>
-          </div>
-
-          <div class="dev-group">
-            <h3>Fixed Size Containers</h3>
-            <Container size="sm">
-              <div style="background: #dbeafe; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
-                Small container (max-width: 640px)
-              </div>
-            </Container>
-            <Container size="md">
-              <div style="background: #dbeafe; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
-                Medium container (max-width: 768px)
-              </div>
-            </Container>
-            <Container size="lg">
-              <div style="background: #dbeafe; padding: 1rem; border-radius: 0.5rem; margin-bottom: 1rem;">
-                Large container (max-width: 1024px)
-              </div>
-            </Container>
-          </div>
-
-          <div class="dev-group">
-            <h3>Fluid Container</h3>
-            <Container fluid>
-              <div style="background: #fef3c7; padding: 1rem; border-radius: 0.5rem;">
-                Fluid container takes full width with padding.
-              </div>
-            </Container>
-          </div>
+      <!-- Input Section -->
+      <section class="mb-12">
+        <h2 class="text-3xl font-bold mb-6 text-gray-900 dark:text-white">Input</h2>
+        <div class="max-w-md space-y-4">
+          <Input
+            v-model="inputValue"
+            label="Name"
+            placeholder="Enter your name"
+            @blur="handleInputBlur"
+          />
+          <Input
+            v-model="inputValue"
+            label="Email"
+            type="email"
+            placeholder="example@email.com"
+            hint="We'll never share your email with anyone else."
+          />
+          <Input
+            v-model="inputValue"
+            label="Required Field"
+            placeholder="This field is required"
+            :error-message="inputError"
+            required
+            @blur="handleInputBlur"
+          />
         </div>
       </section>
 
-      <section class="dev-section">
-        <h2>Toast Component</h2>
-        <div class="dev-showcase">
-          <div class="dev-group">
-            <h3>Toast Types</h3>
-            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-              <Button @click="showToastMessage('success')">Success Toast</Button>
-              <Button @click="showToastMessage('info')">Info Toast</Button>
-              <Button @click="showToastMessage('warning')">Warning Toast</Button>
-              <Button @click="showToastMessage('error')">Error Toast</Button>
-            </div>
-          </div>
+      <!-- Toast Section -->
+      <section class="mb-12">
+        <h2 class="text-3xl font-bold mb-6 text-gray-900 dark:text-white">Toast</h2>
+        <div class="flex flex-wrap gap-4">
+          <Button @click="showToastMessage('success')">Success Toast</Button>
+          <Button @click="showToastMessage('info')">Info Toast</Button>
+          <Button @click="showToastMessage('warning')">Warning Toast</Button>
+          <Button @click="showToastMessage('error')">Error Toast</Button>
         </div>
 
         <Toast
@@ -200,106 +195,22 @@
         />
       </section>
 
-      <section class="dev-section">
-        <h2>Input Component</h2>
-        <div class="dev-showcase">
-          <div class="dev-group">
-            <h3>Basic Input</h3>
-            <Input
-              v-model="inputValue"
-              label="Name"
-              placeholder="Enter your name"
-              @blur="handleInputBlur"
-            />
+      <!-- Container Section -->
+      <section class="mb-12">
+        <h2 class="text-3xl font-bold mb-6 text-gray-900 dark:text-white">Container</h2>
+        <Container>
+          <div class="bg-blue-100 dark:bg-blue-900 p-4 rounded-lg">
+            <p class="text-gray-900 dark:text-white">This container automatically adjusts its max-width based on screen size.</p>
+            <p class="text-gray-700 dark:text-gray-300 mt-2">Try resizing your browser window to see it in action.</p>
           </div>
-
-          <div class="dev-group">
-            <h3>Input with Hint</h3>
-            <Input
-              v-model="inputValue"
-              label="Email"
-              type="email"
-              placeholder="example@email.com"
-              hint="We'll never share your email with anyone else."
-            />
-          </div>
-
-          <div class="dev-group">
-            <h3>Input with Error</h3>
-            <Input
-              v-model="inputValue"
-              label="Required Field"
-              placeholder="This field is required"
-              :error-message="inputError"
-              required
-              @blur="handleInputBlur"
-            />
-          </div>
-
-          <div class="dev-group">
-            <h3>Input States</h3>
-            <Input
-              v-model="inputValue"
-              label="Disabled Input"
-              placeholder="This is disabled"
-              disabled
-            />
-            <Input
-              v-model="inputValue"
-              label="Readonly Input"
-              placeholder="This is readonly"
-              readonly
-            />
-          </div>
-
-          <div class="dev-group">
-            <h3>Input with Prefix/Suffix</h3>
-            <Input
-              v-model="inputValue"
-              label="Price"
-              type="number"
-              placeholder="0.00"
-            >
-              <template #prefix>$</template>
-            </Input>
-            <Input
-              v-model="inputValue"
-              label="Website"
-              type="url"
-              placeholder="example"
-            >
-              <template #suffix>.com</template>
-            </Input>
-          </div>
-
-          <div class="dev-group">
-            <h3>Different Input Types</h3>
-            <Input
-              v-model="inputValue"
-              label="Password"
-              type="password"
-              placeholder="Enter password"
-            />
-            <Input
-              v-model="inputValue"
-              label="Search"
-              type="search"
-              placeholder="Search..."
-            />
-            <Input
-              v-model="inputValue"
-              label="Date"
-              type="date"
-            />
-          </div>
-        </div>
+        </Container>
       </section>
     </main>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import Button from '../components/Button/Button.vue'
 import Modal from '../components/Modal/Modal.vue'
 import Card from '../components/Card/Card.vue'
@@ -308,22 +219,34 @@ import Container from '../components/Container/Container.vue'
 import Toast from '../components/Toast/Toast.vue'
 import Input from '../components/Input/Input.vue'
 
+const isDark = ref(false)
 const showModal = ref(false)
 const showSmallModal = ref(false)
 const showLargeModal = ref(false)
-const clickMessage = ref('')
 const showAlert = ref(true)
 const showToast = ref(false)
 const toastType = ref<'success' | 'warning' | 'error' | 'info'>('info')
 const inputValue = ref('')
 const inputError = ref('')
 
-const handleButtonClick = () => {
-  clickMessage.value = 'Button clicked! 🎉'
-  setTimeout(() => {
-    clickMessage.value = ''
-  }, 2000)
+const toggleDark = () => {
+  isDark.value = !isDark.value
+  if (isDark.value) {
+    document.documentElement.classList.add('dark')
+    localStorage.setItem('theme', 'dark')
+  } else {
+    document.documentElement.classList.remove('dark')
+    localStorage.setItem('theme', 'light')
+  }
 }
+
+onMounted(() => {
+  const savedTheme = localStorage.getItem('theme')
+  if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+    isDark.value = true
+    document.documentElement.classList.add('dark')
+  }
+})
 
 const handleModalClose = () => {
   console.log('Modal closed')
@@ -342,92 +265,3 @@ const handleInputBlur = () => {
   }
 }
 </script>
-
-<style scoped>
-.dev-container {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 2rem;
-}
-
-.dev-header {
-  text-align: center;
-  color: white;
-  margin-bottom: 3rem;
-}
-
-.dev-header h1 {
-  font-size: 2.5rem;
-  margin: 0 0 0.5rem 0;
-  font-weight: 700;
-}
-
-.dev-header p {
-  font-size: 1.25rem;
-  margin: 0;
-  opacity: 0.9;
-}
-
-.dev-main {
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.dev-section {
-  background: white;
-  border-radius: 0.75rem;
-  padding: 2rem;
-  margin-bottom: 2rem;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-}
-
-.dev-section h2 {
-  margin: 0 0 1.5rem 0;
-  color: #1f2937;
-  font-size: 1.75rem;
-}
-
-.dev-showcase {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
-
-.dev-group {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.dev-group h3 {
-  margin: 0;
-  color: #4b5563;
-  font-size: 1rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.dev-group :deep(.vasig-button) {
-  margin-right: 0.5rem;
-  margin-bottom: 0.5rem;
-}
-
-.dev-message {
-  color: #10b981;
-  font-weight: 500;
-  margin-top: 0.5rem;
-}
-
-.dev-group :deep(.vasig-card) {
-  margin-bottom: 1rem;
-}
-
-.dev-group :deep(.vasig-alert) {
-  margin-bottom: 1rem;
-}
-
-.dev-group :deep(.vasig-input-wrapper) {
-  margin-bottom: 1rem;
-}
-</style>
